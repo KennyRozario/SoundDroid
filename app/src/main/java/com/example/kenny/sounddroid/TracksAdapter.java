@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kenny.sounddroid.com.example.kenny.sounddroid.soundcloud.Track;
@@ -16,10 +17,12 @@ import java.util.List;
 public class TracksAdapter extends RecyclerView.Adapter<TracksAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder{
         private final TextView titleTextView;
+        private final ImageView thumbImageView;
 
         ViewHolder(View v){
             super(v);
             titleTextView = (TextView) v.findViewById(R.id.track_title);
+            thumbImageView = (ImageView) v.findViewById(R.id.track_thumbnail);
         }
     }
 
