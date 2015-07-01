@@ -1,5 +1,7 @@
 package com.example.kenny.sounddroid;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import com.example.kenny.sounddroid.com.example.kenny.sounddroid.soundcloud.Soun
 import com.example.kenny.sounddroid.com.example.kenny.sounddroid.soundcloud.Track;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +38,21 @@ public class MainActivity extends ActionBarActivity {
     private List<Track> mTracks;
     private TextView mSelectedTitle;
     private ImageView mSelectedThumbnail;
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.player_toolbar);
         mSelectedTitle = (TextView)findViewById(R.id.selected_title);
@@ -56,6 +69,13 @@ public class MainActivity extends ActionBarActivity {
 
                 mSelectedTitle.setText(selectedTrack.getTitle());
                 Picasso.with(MainActivity.this).load(selectedTrack.getAvatarURL()).into(mSelectedThumbnail);
+
+                try {
+                    mMediaPlayer.setDataSource(selectedTrack.getStreamURL() + "?client_id=" + SoundCloudService.CLIENT_ID);
+                    mMediaPlayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         recyclerView.setAdapter(mAdapter);
